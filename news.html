@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Esport News</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="./assets/LCK.png">
+  </div>
+
+  <nav>
+    <a href="#">Trang chủ</a>
+    <a href="#">Lịch thi đấu</a>
+    <a href="#">Bảng xếp hạng</a>
+    <a href="#">Danh sách</a>
+  </nav>
+
+  <button>Đăng nhập</button>
+</header>
+
+<div class="container">
+
+  <main class="article">
+    <div id="banner" class="banner"></div>
+
+    <h1 id="title"></h1>
+
+    <p class="meta">
+      <span id="author"></span> • <span id="date"></span>
+    </p>
+
+    <div class="subscribe-box">
+      🔔 Nhận thêm thông báo về <b id="teamName"></b>
+      <button onclick="subscribe()">Theo dõi</button>
+    </div>
+
+    <div id="content"></div>
+
+    <div class="subscribe-box">
+      🔔 Nhận thêm thông báo về <b id="teamName2"></b>
+      <button onclick="subscribe()">Theo dõi</button>
+    </div>
+  </main>
+
+  <aside class="sidebar">
+    <h3>Bài liên quan</h3>
+    <div id="related"></div>
+  </aside>
+
+</div>
+
+<script src="news.js"></script>
+</body>
+</html>
