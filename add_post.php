@@ -1,11 +1,14 @@
 <?php
+header('Content-Type: application/json');
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 include __DIR__ . "/config.php";
 
 if ($conn->connect_error) {
-    die("Lỗi kết nối DB: " . $conn->connect_error);
+    echo json_encode(["status"=>"error","message"=>"DB lỗi"]);
+    exit();
 }
 
 $title   = $_POST['title'] ?? '';
@@ -14,27 +17,28 @@ $image   = $_POST['image'] ?? '';
 $author  = $_POST['author'] ?? 'Admin';
 $date    = $_POST['date'] ?? date("Y-m-d");
 
-// chuẩn bị câu lệnh
 $sql = "INSERT INTO articles (title, content, banner, author, date) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    die("Lỗi prepare: " . $conn->error);
+    echo json_encode(["status"=>"error","message"=>$conn->error]);
+    exit();
 }
 
 $stmt->bind_param("sssss", $title, $content, $image, $author, $date);
 
 if ($stmt->execute()) {
-
-    // 🔥 LẤY ID BÀI VỪA TẠO
     $id = $conn->insert_id;
 
-    // 🔥 CHUYỂN SANG TRANG PREVIEW
-    header("Location: preview.php?id=" . $id);
-    exit();
-
+    echo json_encode([
+        "status" => "success",
+        "id" => $id
+    ]);
 } else {
-    echo "Lỗi khi insert: " . $stmt->error;
+    echo json_encode([
+        "status" => "error",
+        "message" => $stmt->error
+    ]);
 }
 
 $conn->close();

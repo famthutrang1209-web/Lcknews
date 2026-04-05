@@ -3,9 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Editor - LCK News</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style_trg.css">
 </head>
 <body>
+
+<?php
+include "config.php";
+
+// Khởi tạo biến rỗng cho form
+$editMode = false;
+$title = '';
+$author = '';
+$date = '';
+$banner = '';
+$content = '';
+$tags = '';
+
+// Kiểm tra có id truyền từ admin_dashboard không
+if (isset($_GET['id'])) {
+    $editMode = true;
+    $id = intval($_GET['id']); // bảo vệ SQL injection
+
+    $sql = "SELECT * FROM articles WHERE id = $id LIMIT 1";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $title = $row['title'];
+        $author = $row['author'];
+        $date = $row['date'];
+        $banner = $row['banner'];
+        $content = $row['content'];
+        $tags = $row['tags'];
+    } else {
+        // Nếu id không tồn tại, chuyển về trang tạo mới
+        header("Location: admin.php");
+        exit();
+    }
+}
+?>
 
 <header class="navbar">
   <div class="nav-left">
@@ -28,7 +64,7 @@
   </div>
 </header>
 
-<form id="postForm">
+<form id="postForm" method="POST" action="add_post.php">
 
   <div class="editor-container">
 
@@ -81,3 +117,5 @@
 
 </body>
 </html>
+
+

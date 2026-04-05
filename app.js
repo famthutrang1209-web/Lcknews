@@ -226,3 +226,4 @@ function getRelatedData() {
 function subscribe() {
   alert("Bạn đã theo dõi đội!");
 }
+

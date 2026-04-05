@@ -1,43 +1,50 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-fetch(`http://localhost/esport/get_article.php?id=${id}`)
+if (!id) console.log("Không có ID → đang dùng ID mặc định = 1");
+
+fetch(`get_article.php?id=${id}`)
   .then(res => res.json())
   .then(article => {
-
     document.getElementById("title").innerText = article.title;
     document.getElementById("author").innerText = article.author;
     document.getElementById("date").innerText = article.date;
     document.getElementById("content").innerHTML = article.content;
-    document.getElementById("banner").innerHTML = article.banner;
 
-    if (article.tags && article.tags.length > 0) {
-      document.getElementById("teamName").innerText = article.tags[0];
-      document.getElementById("teamName2").innerText = article.tags[0];
+    const bannerContainer = document.getElementById("banner-container");
+    if(article.banner){
+        bannerContainer.innerHTML = `<img src="${article.banner}" alt="Banner">`;
     }
-  });
 
-// RELATED
-fetch("http://localhost/esport/get_articles.php")
+    if(article.tags){
+        try {
+            const tags = JSON.parse(article.tags);
+            document.getElementById("teamName").innerText = tags.join(", ");
+        } catch(e){
+            document.getElementById("teamName").innerText = article.tags;
+        }
+    }
+  })
+  .catch(err => console.error("Lỗi:", err));
+
+// FETCH BÀI LIÊN QUAN
+fetch("get_articles.php")
   .then(res => res.json())
   .then(articles => {
     const relatedDiv = document.getElementById("related");
+    const filtered = articles.filter(a => a.id != id).slice(0, 5);
 
-    articles.forEach(a => {
-      if (a.id != id) {
-        const div = document.createElement("div");
-        div.className = "related-item";
-        div.innerText = a.title;
-
-        div.onclick = () => {
-          window.location.href = `news.html?id=${a.id}`;
-        };
-
-        relatedDiv.appendChild(div);
-      }
+    filtered.forEach(a => {
+      const item = document.createElement("div");
+      item.className = "related-item";
+      item.innerHTML = `
+        ${a.banner ? `<img src="${a.banner}" alt="Hình bài liên quan" class="related-img">` : ''}
+        <h4>${a.title}</h4>
+        <small>${a.date}</small>
+      `;
+      item.onclick = () => {
+        window.location.href = `news.php?id=${a.id}`;
+      };
+      relatedDiv.appendChild(item);
     });
   });
-
-function subscribe() {
-  alert("Đã theo dõi!");
-}

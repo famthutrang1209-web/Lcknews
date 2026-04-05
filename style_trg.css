@@ -550,3 +550,18 @@ input.block::placeholder, textarea::placeholder {
 .dropdown.active .arrow {
   transform: rotate(180deg); /* Xoay mũi tên khi mở */
 }
+
+.write-btn{
+  margin-left: 15px;
+  background: #0ea5e9;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+.write-btn:hover{
+  background: #0284c7;
+}
